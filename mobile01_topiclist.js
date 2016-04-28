@@ -45,6 +45,4 @@ for (var page = 1; page <= 2; page++) {
 
     });
 } //for
-//123321
-//321
-//jim
+//end
