@@ -13,7 +13,7 @@ var mongodbServer = new mongodb.Server('localhost', 27017, {
 var db = new mongodb.Db('FAKE', mongodbServer);
 
 
-for (var page = 1; page <= 1; page++) {
+for (var page = 1; page <= 2; page++) {
 
     var p_url = "http://www.mobile01.com/topiclist.php?f=566&p=" + page;
 
@@ -31,9 +31,9 @@ for (var page = 1; page <= 1; page++) {
         $ = cheerio.load(body);
 
         //爬主題下的回文
-        $('tr').each(function(i, elem) {
+        $('tbody>tr').each(function(i, elem) {
 
-            var desc = $(elem).find('.subject-text a').text()
+            var desc = $(elem).find('.subject-text>a').text()
             var href = "http://www.mobile01.com/" + $(elem).find('.subject-text a').attr('href')
             var dt = $(elem).find('p').first().text()
             var authur = $(elem).find('p').last().text()
