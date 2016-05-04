@@ -108,7 +108,6 @@ module.exports = function(app) {
         //爬主題下的回文
         app.post("/do_parser_topicdetail", function(req, res) {
 
-
             var p_url = "http://www.mobile01.com/topicdetail.php?f=566&t=4779462";
             var options = {
                 url: p_url,
@@ -130,13 +129,23 @@ module.exports = function(app) {
                 if (!error && response.statusCode == 200) {
                     $ = cheerio.load(body);
                     var news = [];
+                    $('div[class = "forum-content"]').each(function(i, elem) {
+                        news[i] = {
+                            //主題
+                            // desc: $(this).children('main').children('h1').text(),
+                            //留言時間
+                            // Reply_time: $(this).children('main').children('article').children('div').children('div[class = "single-post-author group"]').children('div').children('div[class = "fn"]').children('a').text(),
+                            //留言者
+                            Reply_user: $(this).children('.single-post').children('div[class = "single-post-author group"]').children('div').children('div[class = "fn"]').children('a').text(),
+                            //留言內容
+                            Reply_content: $(this).children('main').children('article').children('.single-post').children('div[class = "single-post-content"]').children('div').text(),
+                        }
 
 
-                    $('.single-post').each(function(i, elem) {
+                        console.log("===============");
+                        console.log("留言者：" + news[i].Reply_user);
+                        console.log("留言內容：" + news[i].Reply_content);
 
-                        console.log(elem)
-
-                        
                     });
                     //console.log(news);
 
