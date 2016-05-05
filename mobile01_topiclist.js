@@ -37,44 +37,26 @@ async.whilst(
             $ = cheerio.load(body);
             console.log('爬mobile01_topiclist的主題文');
             //第一頁31個貼文，後續一頁30個貼文
-            var subject = [];
-            $('tbody>tr').each(function(i, elem) {
-                subject[i] = {
-                    desc: $(elem).find('.subject-text>a').text(),
-                    href: "http://www.mobile01.com/" + $(elem).find('.subject-text a').attr('href'),
-                    dt: $(elem).find('p').first().text(),
-                    authur: $(elem).find('.authur a p').last().text()
-                }
-                console.log("===============");
-                console.log("主題：" + subject[i].desc);
-                console.log("主題url：" + subject[i].href);
-                console.log("發文時間：" + subject[i].dt);
-                console.log("發文作者：" + subject[i].authur);
-
-                /* open db */
-                db.open(function() {
-                    /* Select 'contact' collection */
-                    db.collection('mobile01_post', function(err, collection) {
-                        /* Insert a data */
-                        for (var i = 0; i < subject.length; i++) {
-                            collection.insert({
-                                desc: subject.desc,
-                                href: subject.href,
-                                dt: subject.dt,
-                                authur: subject.authur
-                            }, function(err, data) {
-                                if (data) {
-                                    console.log('Successfully Insert');
-                                } else {
-                                    console.log('Failed to Insert');
-                                }
-                            });
-
+            db.open(function() {
+                db.collection('mobile01_post', function(err, collection) {
+                    $('tbody>tr').each(function(i, elem) {
+                        var subject = {
+                            desc: $(elem).find('.subject-text>a').text(),
+                            href: "http://www.mobile01.com/" + $(elem).find('.subject-text a').attr('href'),
+                            dt: $(elem).find('p').first().text(),
+                            authur: $(elem).find('.authur a p').last().text()
                         }
 
+                        console.log(subject);
+                        collection.insert(subject, function(err, data) {
+                            if (data) {
+                                console.log('Successfully Insert');
+                            } else {
+                                console.log('Failed to Insert');
+                            }
+                        });
                     });
                 });
-
             });
 
 
