@@ -6,12 +6,14 @@
     "start": "node server.js"
   },
   "dependencies": {
+    "async": "*",
+    "cheerio": "*",
+    "es6-promise": "^3.1.2",
     "express": "3.2.6",
+    "iconv-lite": "*",
     "moment": "*",
-    "request" : "*",
-    "cheerio" : "*",
-    "async" : "*",
-    "iconv-lite":"*",
-    "mongodb":"*"
+    "mongodb": "*",
+    "promise": "^7.1.1",
+    "request": "*"
   }
 }

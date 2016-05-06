@@ -6,6 +6,8 @@ moment.locale("zh-tw");
 var async = require('async');
 var mongodb = require('mongodb');
 var Promise = require('es6-promise').Promise;
+var Promise = require('promise');
+
 
 
 var mongodbServer = new mongodb.Server('localhost', 27017, {
@@ -14,65 +16,82 @@ var mongodbServer = new mongodb.Server('localhost', 27017, {
 });
 var db = new mongodb.Db('FAKE', mongodbServer);
 
-var page = 0;
 
-async.whilst(
+var promise = new Promise(function(page, reject) {
+    console.log("inner promise");
+    page(1);
+});
 
-    function() {
-        page++;
-        console.log("page_value：" + page);
-        return page <= 10; //控制要抓mobile01_topiclist幾頁
-    },
+promise.then(function(val) {
+    console.log(val); // 1
+    return val + 2;
+}).then(function(val) {
+    console.log(val); // 3
+}, function (error) {
+    console.log(error);
+});
 
-    function(callback) {
-        var p_url = "http://www.mobile01.com/topiclist.php?f=566&p=" + page;
-        var options = {
-            url: p_url,
-            headers: {
-                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.112 Safari/537.36',
-            }
-        };
-        console.log("now_url：" + p_url);
+console.log("outer promise");
 
-        request(options, function(error, response, body) {
-            if (error) return callback(error)
-            $ = cheerio.load(body);
-            console.log('爬mobile01_topiclist的主題文');
-            //第一頁31個貼文，後續一頁30個貼文
-            db.open(function() {
-                db.collection('mobile01_post', function(err, collection) {
-                    $('tbody>tr').each(function(i, elem) {
-                        var subject = {
-                            desc: $(elem).find('.subject-text>a').text(),
-                            href: "http://www.mobile01.com/" + $(elem).find('.subject-text a').attr('href'),
-                            dt: $(elem).find('p').first().text(),
-                            authur: $(elem).find('.authur a p').last().text()
-                        }
+// var page = 0;
 
-                        console.log(subject);
-                        collection.insert(subject, function(err, data) {
-                            if (data) {
-                                console.log('Successfully Insert');
-                            } else {
-                                console.log('Failed to Insert');
-                            }
-                        });
-                    });
-                });
-            });
+// async.whilst(
+
+//     function() {
+//         page++;
+//         console.log("page_value：" + page);
+//         return page <= 10; //控制要抓mobile01_topiclist幾頁
+//     },
+
+//     function(callback) {
+//         var p_url = "http://www.mobile01.com/topiclist.php?f=566&p=" + page;
+//         var options = {
+//             url: p_url,
+//             headers: {
+//                 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.112 Safari/537.36',
+//             }
+//         };
+//         console.log("now_url：" + p_url);
+
+//         request(options, function(error, response, body) {
+//             if (error) return callback(error)
+//             $ = cheerio.load(body);
+//             console.log('爬mobile01_topiclist的主題文');
+//             //第一頁31個貼文，後續一頁30個貼文
+//             db.open(function() {
+//                 db.collection('mobile01_post', function(err, collection) {
+//                     $('tbody>tr').each(function(i, elem) {
+//                         var subject = {
+//                             desc: $(elem).find('.subject-text>a').text(),
+//                             href: "http://www.mobile01.com/" + $(elem).find('.subject-text a').attr('href'),
+//                             dt: $(elem).find('p').first().text(),
+//                             authur: $(elem).find('.authur a p').last().text()
+//                         }
+
+//                         console.log(subject);
+//                         collection.insert(subject, function(err, data) {
+//                             if (data) {
+//                                 console.log('Successfully Insert');
+//                             } else {
+//                                 console.log('Failed to Insert');
+//                             }
+//                         });
+//                     });
+//                 });
+//             });
 
 
-            setTimeout(function() {
-                callback(null, page);
-            }, 2500);
-        }); //request end
-    }, //function(callback) end
+//             setTimeout(function() {
+//                 callback(null, page);
+//             }, 2500);
+//         }); //request end
+//     }, //function(callback) end
 
 
-    function(error) {
-        if (error) {
-            console.log("error:" + error);
+//     function(error) {
+//         if (error) {
+//             console.log("error:" + error);
 
-        }
-    }
-); //async.whilst end
+//         }
+//     }
+// ); //async.whilst end
