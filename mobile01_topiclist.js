@@ -19,7 +19,7 @@ async.whilst(
     function() {
         page++;
         console.log("page_value：" + page);
-        return page <= 1; //控制要抓mobile01_topiclist幾頁
+        return page <= 10; //控制要抓mobile01_topiclist幾頁
     },
 
     function(callback) {

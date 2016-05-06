@@ -13,7 +13,7 @@ var mongodbServer = new mongodb.Server('localhost', 27017, {
 var db = new mongodb.Db('FAKE', mongodbServer);
 
 
-for (var page = 1; page <= 3; page++) {
+for (var page = 1; page <= 1; page++) {
 
     var p_url = "http://www.mobile01.com/topicdetail.php?f=566&t=4771973&p=" + page;
     var options = {
@@ -31,15 +31,16 @@ for (var page = 1; page <= 3; page++) {
 
         //爬主題下的回文
         $('.single-post').each(function(i, elem) {
-
-            var Reply_user = $(elem).find('.fn').text()
-            var Reply_time = $(elem).find('.date').text()
-            var Reply_content = $(elem).find('.single-post-content').text()
+            var singlepost = {
+                Reply_user : $(elem).find('.fn').text(),
+                Reply_time : $(elem).find('.date').text(),
+                Reply_content : $(elem).find('.single-post-content').remove('\r').text()
+            }
+            //http://stackoverflow.com/questions/28790458/how-to-remove-div-and-br-using-cheerio-js
+            //https://api.jquery.com/jQuery.trim/
 
             console.log("===============");
-            console.log("留言者：" + Reply_user);
-            console.log("留言時間：" + Reply_time);
-            console.log("留言內容：" + Reply_content);
+            console.log(singlepost);
 
         });
 
