@@ -38,6 +38,15 @@ function crawler() {
     };
     console.log("now_url：" + p_url);
 
+    //  //正確寫法   
+    // request(options)
+    // .then(function(response, body) {
+    //     //
+    //     return {}
+    // })
+    // .then()
+
+
     request(options, function(error, response, body) {
         if (error) return callback(error)
         $ = cheerio.load(body);
@@ -49,8 +58,8 @@ function crawler() {
                 dt: $(elem).find('p').first().text(),
                 authur: $(elem).find('.authur a p').last().text()
             }
-
             console.log(subject);
+
             db.collection('mobile01_post', function(err, collection) {
                 collection.insert(subject, function(err, data) {
                     if (data) {
@@ -61,8 +70,6 @@ function crawler() {
                 });
             });
         });
-
-
 
         setTimeout(function() {
             console.log('this is setTimeout');
@@ -79,7 +86,8 @@ function onRejected(error) {
     }
 }
 
-var promise = new Promise(function(page) {
+
+var promise = new Promise(function(resolve) {
     page(0);
 });
 console.log('new Promise Successfully')
