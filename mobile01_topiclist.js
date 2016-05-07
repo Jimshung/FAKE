@@ -19,13 +19,16 @@ var db = new mongodb.Db('FAKE', mongodbServer);
 var page = 0;
 
 
-function taskA() {
-    page++;
-    console.log("page_value：" + page);
-    return page <= 2; //控制要抓mobile01_topiclist幾頁
+function openDB() {
+    db.open(function() {
+
+    });
 }
 
-function taskB() {
+function crawler() {
+    page++;
+    console.log("page_value：" + page);
+
     var p_url = "http://www.mobile01.com/topiclist.php?f=566&p=" + page;
     var options = {
         url: p_url,
@@ -38,35 +41,34 @@ function taskB() {
     request(options, function(error, response, body) {
         if (error) return callback(error)
         $ = cheerio.load(body);
-        console.log('爬mobile01_topiclist的主題文');
-        //第一頁31個貼文，後續一頁30個貼文
-        db.open(function() {
-            db.collection('mobile01_post', function(err, collection) {
-                $('tbody>tr').each(function(i, elem) {
-                    var subject = {
-                        desc: $(elem).find('.subject-text>a').text(),
-                        href: "http://www.mobile01.com/" + $(elem).find('.subject-text a').attr('href'),
-                        dt: $(elem).find('p').first().text(),
-                        authur: $(elem).find('.authur a p').last().text()
-                    }
 
-                    console.log(subject);
-                    collection.insert(subject, function(err, data) {
-                        if (data) {
-                            console.log('Successfully Insert');
-                        } else {
-                            console.log('Failed to Insert');
-                        }
-                    });
+        $('tbody>tr').each(function(i, elem) {
+            var subject = {
+                desc: $(elem).find('.subject-text>a').text(),
+                href: "http://www.mobile01.com/" + $(elem).find('.subject-text a').attr('href'),
+                dt: $(elem).find('p').first().text(),
+                authur: $(elem).find('.authur a p').last().text()
+            }
+
+            console.log(subject);
+            db.collection('mobile01_post', function(err, collection) {
+                collection.insert(subject, function(err, data) {
+                    if (data) {
+                        console.log('Successfully Insert');
+                    } else {
+                        console.log('Failed to Insert');
+                    }
                 });
             });
         });
 
 
+
         setTimeout(function() {
             console.log('this is setTimeout');
-            taskB(page);
+            crawler(page);
         }, 2500);
+
     }); //request end
 }
 
@@ -77,14 +79,13 @@ function onRejected(error) {
     }
 }
 
-function finalTask() {
-    console.log("Final Task");
-}
-
-var promise = Promise.resolve();
+var promise = new Promise(function(page) {
+    page(0);
+});
+console.log('new Promise Successfully')
 promise
-    .then(taskA)
-    .then(taskB)
-    .catch(onRejected)
-    .then(finalTask);
-
+    .then(openDB)
+    .then(crawler(function(page) {
+        return page <= 2; //控制要抓mobile01_topiclist幾頁
+    }))
+    .catch(onRejected);
