@@ -6,12 +6,13 @@
     "start": "node server.js"
   },
   "dependencies": {
+    "async": "*",
+    "cheerio": "*",
+    "ckip-client": "0.0.3",
     "express": "3.2.6",
+    "iconv-lite": "*",
     "moment": "*",
-    "request" : "*",
-    "cheerio" : "*",
-    "async" : "*",
-    "iconv-lite":"*",
-    "mongodb":"*"
+    "mongodb": "*",
+    "request": "*"
   }
 }
