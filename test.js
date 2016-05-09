@@ -24,37 +24,9 @@ for (var page = 1; page <= 1; page++) {
     };
     console.log(p_url);
     request(options, function(error, response, body) {
-        // console.log(error);
         if (error) return console.log(error)
-
         $ = cheerio.load(body);
-
-        var re = /(\\r\\n|\\r|\\n|\s)/gm;
-        var str = $('.single-post').find('.single-post-content').text();
-        //console.log("str:" + str);
-
-
-        var result = str.replace(/\\r\\n|\\r|\\n|\s/g, "");
-        // console.log("result:" + result);
-
-
-        // var m;
-        // while ((m = re.exec(str)) !== null) {
-        //     if (m.index === re.lastIndex) {
-        //         re.lastIndex++;
-        //     }
-        // }
-
-        //用來串m0,m1        
-        // var s;
-        // for (var i = 0; i<=m.length; i++) {
-        //     s = s + m[i];
-        // }
-        // // View your result using the m-variable.
-        // // eg m[0] etc.
-
         //爬主題下的回文
-
         $('.single-post').each(function(i, elem) {
 
             var singlepost = {
@@ -65,14 +37,9 @@ for (var page = 1; page <= 1; page++) {
                 //http://stackoverflow.com/questions/28790458/how-to-remove-div-and-br-using-cheerio-js
                 //https://api.jquery.com/jQuery.trim/
 
-            //console.log("===============");
+            console.log("===============");
             console.log(singlepost);
 
-            //console.log(elem[1]);
-            // console.log(singlepost[Reply_content]);
-
         });
-        //Reply_content.replace(/[\\r\\n]/g, "");
-
     });
 } //for
