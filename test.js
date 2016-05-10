@@ -12,6 +12,29 @@ var axios = require('axios');
 
 // http://www.mobile01.com/topicdetail.php?f=566&t=4794459&p=1
 
+
+axios.post('http://www.mobile01.com/topicdetail.php?f=566&t=4794459&p=1', {
+        headers: {
+            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.112 Safari/537.36',
+        },
+    })
+    .then(function(response) {
+        return axios.post('http://www.mobile01.com/topicdetail.php?f=566&t=4794459&p=2')
+    })
+    .then(function(response) {
+        console.log(response);
+
+        return axios.post('http://www.mobile01.com/topicdetail.php?f=566&t=4794459&p=3')
+    })
+    .then(function(response) {
+        return axios.post('http://www.mobile01.com/topicdetail.php?f=566&t=4794459&p=4')
+    })
+    .catch(function(response) {
+        console.log(response);
+    });
+
+
+/*
 axios.get('http://www.mobile01.com/topicdetail.php', {
         // baseURL: 'http://www.mobile01.com/topicdetail.php',
         headers: {
@@ -33,26 +56,26 @@ axios.get('http://www.mobile01.com/topicdetail.php', {
         var last_page = $('.pagination').find('a').last().text();
         // console.log(last_page);
 
-        for (var i = 1; i <= last_page; i++) {
-            console.log("現在頁數：" + response.config.params.p);
+        // for (var i = 1; i <= last_page; i++) {
+        //     console.log("現在頁數：" + response.config.params.p);
 
-            $('.single-post').each(function(i, elem) {
-                var singlepost = {
-                    Reply_user: $(elem).find('.fn').text(),
-                    Reply_time: $(elem).find('.date').text(),
-                    Reply_content: $(elem).find('.single-post-content').text().replace(/\\r\\n|\\r|\\n|\s/g, "").replace(/.*:+.+(恕刪)./g, "")
-                }
-                console.log("===============");
-                console.log(singlepost);
-            
-            });
-            return response.config.params.p++;
-        };
+        $('.single-post').each(function(i, elem) {
+            var singlepost = {
+                Reply_user: $(elem).find('.fn').text(),
+                Reply_time: $(elem).find('.date').text(),
+                Reply_content: $(elem).find('.single-post-content').text().replace(/\\r\\n|\\r|\\n|\s/g, "").replace(/.*:+.+(恕刪)./g, "")
+            }
+            console.log("===============");
+            console.log(singlepost);
+
+        });
+        // response.config.params.p++;
+        // };
     })
     .catch(function(response) {
         console.log(response);
     });
-
+*/
 
 // for (var page = 1; page <= 1; page++) {
 
