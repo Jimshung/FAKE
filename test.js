@@ -10,35 +10,44 @@ var axios = require('axios');
 
 
 
+// http://www.mobile01.com/topicdetail.php?f=566&t=4794459&p=1
 
-var mongodbServer = new mongodb.Server('localhost', 27017, {
-    auto_reconnect: true,
-    poolSize: 10
-});
-var db = new mongodb.Db('FAKE', mongodbServer);
-
-
-
-axios.post('http://www.mobile01.com/topicdetail.php?f=566&t=4771973&p=1', {
+axios.get('http://www.mobile01.com/topicdetail.php', {
+        // baseURL: 'http://www.mobile01.com/topicdetail.php',
         headers: {
             'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.112 Safari/537.36',
-        }
+
+        },
+        timeout: 2000,
+        params: {
+            f: 566,
+            t: 4794459,
+            p: 1
+        },
     })
     .then(function(response) {
+        // console.log(response.config.params.p);
+
         $ = cheerio.load(response.data);
 
-        $('.single-post').each(function(i, elem) {
-            var singlepost = {
-                Reply_user: $(elem).find('.fn').text(),
-                Reply_time: $(elem).find('.date').text(),
-                Reply_content: $(elem).find('.single-post-content').text().replace(/\\r\\n|\\r|\\n|\s/g, "").replace(/.*:+.+(恕刪)./g, "")
-            }
+        var last_page = $('.pagination').find('a').last().text();
+        // console.log(last_page);
 
+        for (var i = 1; i <= last_page; i++) {
+            console.log("現在頁數：" + response.config.params.p);
 
-            console.log("===============");
-            console.log(singlepost);
-
-        });
+            $('.single-post').each(function(i, elem) {
+                var singlepost = {
+                    Reply_user: $(elem).find('.fn').text(),
+                    Reply_time: $(elem).find('.date').text(),
+                    Reply_content: $(elem).find('.single-post-content').text().replace(/\\r\\n|\\r|\\n|\s/g, "").replace(/.*:+.+(恕刪)./g, "")
+                }
+                console.log("===============");
+                console.log(singlepost);
+                 response.config.params.p++;
+            });
+            response.config.params.p++;
+        };
     })
     .catch(function(response) {
         console.log(response);
