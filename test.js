@@ -32,7 +32,7 @@ for (var page = 1; page <= 1; page++) {
             var singlepost = {
                     Reply_user: $(elem).find('.fn').text(),
                     Reply_time: $(elem).find('.date').text(),
-                    Reply_content: $(elem).find('.single-post-content').text().replace(/\\r\\n|\\r|\\n|\s/gm, "")
+                    Reply_content: $(elem).find('.single-post-content').text().replace(/\\r\\n|\\r|\\n|\s/gm, "").replace(/.*:+.+(恕刪)./g,"")
                 }
                 //http://stackoverflow.com/questions/28790458/how-to-remove-div-and-br-using-cheerio-js
                 //https://api.jquery.com/jQuery.trim/
