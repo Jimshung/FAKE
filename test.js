@@ -44,9 +44,9 @@ axios.get('http://www.mobile01.com/topicdetail.php', {
                 }
                 console.log("===============");
                 console.log(singlepost);
-                 response.config.params.p++;
+            
             });
-            response.config.params.p++;
+            return response.config.params.p++;
         };
     })
     .catch(function(response) {
