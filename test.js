@@ -12,75 +12,43 @@ var axios = require('axios');
 
 // http://www.mobile01.com/topicdetail.php?f=566&t=4794459&p=1
 
+var postloop=[];
 
-axios.post('http://www.mobile01.com/topicdetail.php?f=566&t=4794459&p=1', {
-        headers: {
-            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.112 Safari/537.36',
-        },
-    })
-    .then(function(response) {
-        $ = cheerio.load(response.data);
-        $('.single-post').each(function(i, elem) {
-            var singlepost = {
-                Reply_user: $(elem).find('.fn').text(),
-                Reply_time: $(elem).find('.date').text(),
-                Reply_content: $(elem).find('.single-post-content').text().replace(/\\r\\n|\\r|\\n|\s/g, "").replace(/.*:+.+(恕刪)./g, "")
-            }
-            console.log("===============");
-            console.log(singlepost);
-        });
-        return axios.post('http://www.mobile01.com/topicdetail.php?f=566&t=4794459&p=2', {
+var getAPage = function(page) {
+    return axios.post('http://www.mobile01.com/topicdetail.php?f=566&t=4794459&p=' + page, {
             headers: {
                 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.112 Safari/537.36',
             },
         })
-    })
-    .then(function(response) {
-        $ = cheerio.load(response.data);
-        $('.single-post').each(function(i, elem) {
-            var singlepost = {
-                Reply_user: $(elem).find('.fn').text(),
-                Reply_time: $(elem).find('.date').text(),
-                Reply_content: $(elem).find('.single-post-content').text().replace(/\\r\\n|\\r|\\n|\s/g, "").replace(/.*:+.+(恕刪)./g, "")
-            }
-            console.log("===============");
-            console.log(singlepost);
-        });
-        return axios.post('http://www.mobile01.com/topicdetail.php?f=566&t=4794459&p=3', {
-            headers: {
-                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.112 Safari/537.36',
-            },
+        .then(function(response) {
+            $ = cheerio.load(response.data);
+            $('.single-post').each(function(i, elem) {
+                var singlepost = {
+                    Reply_user: $(elem).find('.fn').text(),
+                    Reply_time: $(elem).find('.date').text(),
+                    Reply_content: $(elem).find('.single-post-content').text().replace(/\\r\\n|\\r|\\n|\s/g, "").replace(/.*:+.+(恕刪)./g, "")
+                }
+                console.log("===============");
+                console.log(singlepost);
+                // save to db
+            });
+
+
+            return Promise.resolve()
         })
-    })
-    .then(function(response) {
-        $ = cheerio.load(response.data);
-        $('.single-post').each(function(i, elem) {
-            var singlepost = {
-                Reply_user: $(elem).find('.fn').text(),
-                Reply_time: $(elem).find('.date').text(),
-                Reply_content: $(elem).find('.single-post-content').text().replace(/\\r\\n|\\r|\\n|\s/g, "").replace(/.*:+.+(恕刪)./g, "")
-            }
-            console.log("===============");
-            console.log(singlepost);
-        });
-        return axios.post('http://www.mobile01.com/topicdetail.php?f=566&t=4794459&p=4', {
-            headers: {
-                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.112 Safari/537.36',
-            },
-        })
-    }).then(function(response) {
-        $ = cheerio.load(response.data);
-        $('.single-post').each(function(i, elem) {
-            var singlepost = {
-                Reply_user: $(elem).find('.fn').text(),
-                Reply_time: $(elem).find('.date').text(),
-                Reply_content: $(elem).find('.single-post-content').text().replace(/\\r\\n|\\r|\\n|\s/g, "").replace(/.*:+.+(恕刪)./g, "")
-            }
-            console.log("===============");
-            console.log(singlepost);
-        });
-    })
-    .catch(function(response) {});
+}
+
+getAPage(1)
+.then(function() {
+    return getAPage(2)
+})
+.then(function() {
+    return getAPage(3)
+})
+
+
+
+
 
 /*
 axios.get('http://www.mobile01.com/topicdetail.php', {
@@ -100,7 +68,7 @@ axios.get('http://www.mobile01.com/topicdetail.php', {
         // console.log(response.config.params.p);
 
         $ = cheerio.load(response.data);
-
+        //抓分頁總頁數
         var last_page = $('.pagination').find('a').last().text();
         // console.log(last_page);
 
