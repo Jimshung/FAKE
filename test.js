@@ -19,20 +19,68 @@ axios.post('http://www.mobile01.com/topicdetail.php?f=566&t=4794459&p=1', {
         },
     })
     .then(function(response) {
-        return axios.post('http://www.mobile01.com/topicdetail.php?f=566&t=4794459&p=2')
+        $ = cheerio.load(response.data);
+        $('.single-post').each(function(i, elem) {
+            var singlepost = {
+                Reply_user: $(elem).find('.fn').text(),
+                Reply_time: $(elem).find('.date').text(),
+                Reply_content: $(elem).find('.single-post-content').text().replace(/\\r\\n|\\r|\\n|\s/g, "").replace(/.*:+.+(恕刪)./g, "")
+            }
+            console.log("===============");
+            console.log(singlepost);
+        });
+        return axios.post('http://www.mobile01.com/topicdetail.php?f=566&t=4794459&p=2', {
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.112 Safari/537.36',
+            },
+        })
     })
     .then(function(response) {
-        console.log(response);
-
-        return axios.post('http://www.mobile01.com/topicdetail.php?f=566&t=4794459&p=3')
+        $ = cheerio.load(response.data);
+        $('.single-post').each(function(i, elem) {
+            var singlepost = {
+                Reply_user: $(elem).find('.fn').text(),
+                Reply_time: $(elem).find('.date').text(),
+                Reply_content: $(elem).find('.single-post-content').text().replace(/\\r\\n|\\r|\\n|\s/g, "").replace(/.*:+.+(恕刪)./g, "")
+            }
+            console.log("===============");
+            console.log(singlepost);
+        });
+        return axios.post('http://www.mobile01.com/topicdetail.php?f=566&t=4794459&p=3', {
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.112 Safari/537.36',
+            },
+        })
     })
     .then(function(response) {
-        return axios.post('http://www.mobile01.com/topicdetail.php?f=566&t=4794459&p=4')
+        $ = cheerio.load(response.data);
+        $('.single-post').each(function(i, elem) {
+            var singlepost = {
+                Reply_user: $(elem).find('.fn').text(),
+                Reply_time: $(elem).find('.date').text(),
+                Reply_content: $(elem).find('.single-post-content').text().replace(/\\r\\n|\\r|\\n|\s/g, "").replace(/.*:+.+(恕刪)./g, "")
+            }
+            console.log("===============");
+            console.log(singlepost);
+        });
+        return axios.post('http://www.mobile01.com/topicdetail.php?f=566&t=4794459&p=4', {
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.112 Safari/537.36',
+            },
+        })
+    }).then(function(response) {
+        $ = cheerio.load(response.data);
+        $('.single-post').each(function(i, elem) {
+            var singlepost = {
+                Reply_user: $(elem).find('.fn').text(),
+                Reply_time: $(elem).find('.date').text(),
+                Reply_content: $(elem).find('.single-post-content').text().replace(/\\r\\n|\\r|\\n|\s/g, "").replace(/.*:+.+(恕刪)./g, "")
+            }
+            console.log("===============");
+            console.log(singlepost);
+        });
     })
-    .catch(function(response) {
-        console.log(response);
-    });
-
+    .catch(function(response) {});
 
 /*
 axios.get('http://www.mobile01.com/topicdetail.php', {
