@@ -12,16 +12,32 @@ var axios = require('axios');
 
 // http://www.mobile01.com/topicdetail.php?f=566&t=4794459&p=1
 
-var postloop=[];
+// var getAPage = function(page) {
+//     return axios.post('http://www.mobile01.com/topicdetail.php?f=566&t=4794459&p=' + page, {
+//             headers: {
+//                 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.112 Safari/537.36',
+//             },
+//         })
+//         .then(function(response) {
+//             $ = cheerio.load(response.data);
+//             var last_page = $('.pagination').find('a').last().text();
+//             console.log(last_page);
+//             return Promise.resolve()
+//         })
+// }
+
 
 var getAPage = function(page) {
     return axios.post('http://www.mobile01.com/topicdetail.php?f=566&t=4794459&p=' + page, {
             headers: {
                 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.112 Safari/537.36',
             },
+            timeout: 1500,
         })
         .then(function(response) {
             $ = cheerio.load(response.data);
+            var last_page = $('.pagination').find('a').last().text();
+
             $('.single-post').each(function(i, elem) {
                 var singlepost = {
                     Reply_user: $(elem).find('.fn').text(),
@@ -32,19 +48,22 @@ var getAPage = function(page) {
                 console.log(singlepost);
                 // save to db
             });
-
-
             return Promise.resolve()
         })
 }
 
+
+// for (var i = 1; i <= last_page; i++) {
+// getAPage(1)
+// }
+
 getAPage(1)
-.then(function() {
-    return getAPage(2)
-})
-.then(function() {
-    return getAPage(3)
-})
+    .then(function() {
+        return getAPage(2)
+    })
+    .then(function() {
+        return getAPage(3)
+    })
 
 
 
