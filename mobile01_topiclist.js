@@ -8,6 +8,8 @@ var mongodb = require('mongodb');
 var Promise = require('es6-promise').Promise;
 var Promise = require('promise');
 var axios = require('axios');
+var pmongo = require('promised-mongo').compatible();
+
 
 
 var mongodbServer = new mongodb.Server('localhost', 27017, {
@@ -26,27 +28,28 @@ var getAPage = function(page) {
         })
         .then(function(response) {
             $ = cheerio.load(response.data);
-            var last_page = $('.pagination').find('a').last().text();
 
-            $('tbody>tr').each(function(i, elem) {
-                var subject = {
-                    desc: $(elem).find('.subject-text>a').text(),
-                    href: "http://www.mobile01.com/" + $(elem).find('.subject-text a').attr('href'),
-                    dt: $(elem).find('p').first().text(),
-                    authur: $(elem).find('.authur a p').last().text()
-                }
-                console.log("=========================");
-                console.log(subject);
+            //第一頁31個貼文，後續一頁30個貼文
+            db.open(function() {
+                db.collection('mobile01_post', function(err, collection) {
+                    $('tbody>tr').each(function(i, elem) {
+                        var subject = {
+                            desc: $(elem).find('.subject-text>a').text(),
+                            href: "http://www.mobile01.com/" + $(elem).find('.subject-text a').attr('href'),
+                            dt: $(elem).find('p').first().text(),
+                            authur: $(elem).find('.authur a p').last().text()
+                        }
 
-                // db.collection('mobile01_post', function(err, collection) {
-                //     collection.insert(subject, function(err, data) {
-                //         if (data) {
-                //             console.log('Successfully Insert');
-                //         } else {
-                //             console.log('Failed to Insert');
-                //         }
-                //     });
-                // });
+                        console.log(subject);
+                        collection.insert(subject, function(err, data) {
+                            if (data) {
+                                console.log('Successfully Insert');
+                            } else {
+                                console.log('Failed to Insert');
+                            }
+                        });
+                    });
+                });
             });
 
             return Promise.resolve()
@@ -62,9 +65,3 @@ getAPage(1)
     // .then(function() {
     //     return getAPage(3)
     // })
-
-
-// setTimeout(function() {
-//     console.log('this is setTimeout');
-//     crawler(page);
-// }, 2500);
