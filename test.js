@@ -12,25 +12,9 @@ var axios = require('axios');
 
 // http://www.mobile01.com/topicdetail.php?f=566&t=4794459&p=1
 
-var getlastPageValue = function(page) {
-        return axios.post('http://www.mobile01.com/topicdetail.php?f=566&t=4794459&p=' + page, {
-                headers: {
-                    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.112 Safari/537.36',
-                },
-            })
-            .then(function(response) {
-                $ = cheerio.load(response.data);
-                var last_page = $('.pagination').find('a').last().text();
-                console.log(last_page);
-                return Promise.resolve()
-            })
-    }
-    //取分頁最後數值
-    // getlastPageValue(1)
-
 
 var getAPage = function(page) {
-    return axios.post('http://www.mobile01.com/topicdetail.php?f=566&t=4794459&p=' + page, {
+    return axios.post('http://www.mobile01.com/topicdetail.php?f=566&t=4770296&p=' + page, {
             headers: {
                 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.112 Safari/537.36',
             },
@@ -54,16 +38,16 @@ var getAPage = function(page) {
         })
 }
 getAPage().then(function(last_page) {
-          console.log(last_page)
-
-    for (var i = 0; i <= last_page; i++) {
+    // console.log(last_page)
+    for (var i = 2; i <= last_page; i++) {
         var page = 1;
-        // setTimeout(function() {
-        //     console.log('getAPage', page)
-
-        //     return getAPage(page)
-        //     page++;
-        // }, i * 2000)
+        setTimeout(function() {
+            //console.log('getAPage：' + page)
+            page++;
+            console.log('getAPage：' + page)
+            return getAPage(page)
+            
+        }, i * 2000)
     };
 })
 
