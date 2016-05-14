@@ -56,12 +56,25 @@ var getAPage = function(page) {
         })
 }
 
-getAPage(1)
-    .then(function() {
+getAPage().then(function() {
+    for (var i = 2; i <= 6; i++) {
+        var page = 1;
         setTimeout(function() {
-            return getAPage(2)
-        }, 5000);
-    })
-    // .then(function() {
-    //     return getAPage(3)
-    // })
+                console.log('getAPage：' + page)
+                page++;
+                return getAPage(page)
+            }, i * 2000)
+            // console.log('i=' + i)
+    };
+})
+
+
+// getAPage(1)
+//     .then(function() {
+//         setTimeout(function() {
+//             return getAPage(2)
+//         }, 5000);
+//     })
+//     .then(function() {
+//         return getAPage(3)
+//     })
