@@ -45,5 +45,4 @@ getAPage().then(function(last_page) {
         }, i * 2000)
         console.log('i=' + i)
     };
-
 })

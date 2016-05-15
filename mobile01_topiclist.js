@@ -57,7 +57,7 @@ var getAPage = function(page) {
 }
 
 getAPage().then(function() {
-    for (var i = 2; i <= 6; i++) {
+    for (var i = 2; i <= ; i++) {
         var page = 1;
         setTimeout(function() {
                 console.log('getAPage：' + page)
