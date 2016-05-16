@@ -54,46 +54,6 @@ var GetTopicList = function(page) {
         })
 }
 
-
-
-var getAPageAllPost = function(page) {
-    db.open(function() {
-        db.collection('mobile01_post', function(err, collection) {
-            collection.find({}, { href: 1, _id: 0 }).toArray(function(err, data) {
-                if (data) {
-                console.dir(data[0].href) ; 
-                    
-                    return axios.post(data[0].href + page, {
-                            headers: {
-                                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.112 Safari/537.36',
-                            },
-                            timeout: 2000,
-                        })
-                        .then(function(response) {
-                            $ = cheerio.load(response.data);
-
-                            var last_page = $('.pagination').find('a').last().attr('href').replace(/.*p=/g, "");
-                            //last_page為分頁最後值
-                            $('.single-post').each(function(i, elem) {
-                                var singlepost = {
-                                    Reply_user: $(elem).find('.fn').text(),
-                                    Reply_time: $(elem).find('.date').text(),
-                                    Reply_content: $(elem).find('.single-post-content').text().replace(/\\r\\n|\\r|\\n|\s/g, "").replace(/.*:+.+(恕刪)./g, "")
-                                }
-                                console.log("===============");
-                                console.log(singlepost);
-                                // save to db
-                            });
-                            return Promise.resolve(last_page)
-                        })
-                } else {
-                    throw new Error(error);
-                }
-            })
-        });
-    });
-}
-
 // GetTopicList().then(function() {
 //     for (var i = 2; i <= 10; i++) {
 //         var page = 1;
@@ -106,4 +66,51 @@ var getAPageAllPost = function(page) {
 //     };
 // })
 
-getAPageAllPost(1);
+
+
+db.open(function() {
+    db.collection('mobile01_post', function(err, collection) {
+        collection.find({}, { href: 1, _id: 0 }).toArray(function(err, data) {
+            if (data) {
+                var getAPageAllPost = function(page) {
+                    return axios.post(data[0].href + '&p=' + page, {
+                            headers: {
+                                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.112 Safari/537.36',
+                            },
+                            timeout: 2000,
+                        })
+                        .then(function(response) {
+                            $ = cheerio.load(response.data);
+                            var last_page = $('.pagination').find('a').last().attr('href').replace(/.*p=/g, "");
+                            //last_page為分頁最後值
+                            $('.single-post').each(function(i, elem) {
+                                var singlepost = {
+                                        Reply_user: $(elem).find('.fn').text(),
+                                        Reply_time: $(elem).find('.date').text(),
+                                        Reply_content: $(elem).find('.single-post-content').text().replace(/\\r\\n|\\r|\\n|\s/g, "").replace(/.*:+.+(恕刪)./g, "")
+                                    }
+                                    // console.log("===============");
+                                    // console.log(singlepost);
+                                    // save to db
+                            });
+                            return Promise.resolve(last_page)
+                        })
+                        .catch(function(err) { console.log("error:" + err); })
+                }
+            } else {
+                throw new Error(error);
+            }
+            getAPageAllPost().then(function(last_page) {
+                for (var i = 2; i <= last_page; i++) {
+                    var page = 1;
+                    setTimeout(function() {
+                        // console.log('getAPageAllPost:' + page)
+                        page++;
+                        return getAPageAllPost(page)
+                    }, i * 2000)
+                };
+            })
+        console.log(data);
+        })
+    });
+});

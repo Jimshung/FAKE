@@ -25,7 +25,7 @@ db.open(function() {
         collection.find({}, { href: 1, _id: 0 }).toArray(function(err, data) {
             // console.dir(data[0].href) ; 
             if (data) {
-                    console.dir(data[0]);
+                console.dir(data[0]);
 
                 // for (var i = 0; i < data.length; i++) {
                 //     console.dir(data[i].href);
@@ -36,3 +36,7 @@ db.open(function() {
         })
     });
 });
+
+// var regex = /((t=.+[0-9]+))/g;
+// var myArray = myRe.exec(data[i].href);
+// console.dir(myRe.lastIndex.replace("t=", ""));
