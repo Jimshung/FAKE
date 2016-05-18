@@ -23,15 +23,26 @@ db.open(function() {
     db.collection('mobile01_post', function(err, collection) {
         // db.getCollection('mobile01_post').find({}, { "href": 1, _id: 0 });
         collection.find({}, { href: 1, _id: 0 }).toArray(function(err, data) {
-            // console.dir(data[0].href) ; 
+            // console.dir(data[0].href); 
             if (data) {
-                console.dir(data[0]);
+                // console.log(data);
+
+                // console.dir(Href);
+                // var myArray = [];
+                // data.href = myArray;
+
+                data.forEach(function(element) {
+                    var url=element.href;
+                    console.log(url);
+                });
 
                 // for (var i = 0; i < data.length; i++) {
-                //     console.dir(data[i].href);
+                //     console.dir("i:" + i);
+
+                //     console.dir("URL:" + data[i].href);
                 // };
             } else {
-                throw new Error(error);
+                throw new Error(err);
             }
         })
     });
