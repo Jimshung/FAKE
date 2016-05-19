@@ -5,7 +5,6 @@ var iconv = require('iconv-lite'); // 用來轉碼
 moment.locale("zh-tw");
 var async = require('async');
 var mongodb = require('mongodb');
-var Promise = require('es6-promise').Promise;
 var axios = require('axios');
 
 

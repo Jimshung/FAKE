@@ -8,7 +8,6 @@ var mongodb = require('mongodb');
 var Promise = require('es6-promise').Promise;
 var Promise = require('promise');
 var axios = require('axios');
-var pmongo = require('promised-mongo').compatible();
 
 
 
@@ -28,7 +27,7 @@ var getAPageAllPost = function(element, page, to_continue) {
     } else {
         //console.log('element',element);
         var this_href = element.href;
-        console.log("log1:" + element.href);
+        console.log("log2:" + element.href);
     }
     return axios.post(this_href, {
             headers: {
@@ -41,7 +40,7 @@ var getAPageAllPost = function(element, page, to_continue) {
             var last_page = $('.pagination').find('a').last().attr('href').replace(/.*p=/g, "");
             //last_page為分頁最後值
 
-            /*
+            
             db.collection('post_detail', function(err, collection) {
                 $('.single-post').each(function(i, elem) {
                     var singlepost = {
@@ -62,8 +61,7 @@ var getAPageAllPost = function(element, page, to_continue) {
 
                 });
             });
-            */
-
+            
             console.log('last_page_in', last_page);
             console.log('to_continue', to_continue);
             if (to_continue && last_page) {
@@ -76,44 +74,11 @@ var getAPageAllPost = function(element, page, to_continue) {
         .catch(function(err) { console.log("error:" + err); })
 };
 
-
-/*
-db.open(function() {
-    db.collection('mobile01_post', function(err, collection) {
-        collection.find({}, { href: 1, _id: 0 }).toArray(function(err, data) {
-            if (data) {
-                element = data[0];
-                console.log("element",element)
-                getAPageAllPost(element, 1, true).then(function(last_page) {
-                    console.log('last_page', last_page);
-                    if (last_page) {
-                        for (var i = 2; i <= last_page; i++) {
-                            var page = 1;
-                            setTimeout(function() {
-                                    page++;
-                                    console.log('getAPageAllPost:' + page);
-                                    return getAPageAllPost(element, page, false);
-                                }, 
-                                i * 2000);
-                        }
-                    } else {
-                        console.log('stop');
-                        return false;
-                    }
-                });
-
-            } else {
-                throw new Error(err);
-            }
-
-        })
-    });
-});*/
-var open_db_function = function(table, func_in ){ 
+var open_db_function = function(table, func_in) {
 
     db.open(function() {
         db.collection(table, function(err, collection) {
-            func_in(collection,err);
+            func_in(collection, err);
         });
     });
 };
@@ -121,11 +86,13 @@ var open_db_function = function(table, func_in ){
 
 open_db_function(
     'mobile01_post',
-    function(collection,err){
+    function(collection, err) {
         collection.find({}, { href: 1, _id: 0 }).toArray(function(err, data) {
             if (data) {
-                element = data[0];
-                console.log("element",element)
+                // element = data[0];
+                element = data;
+
+                console.log("element", element)
                 getAPageAllPost(element, 1, true).then(function(last_page) {
                     console.log('last_page', last_page);
                     if (last_page) {
@@ -133,9 +100,9 @@ open_db_function(
                             var page = 1;
                             setTimeout(function() {
                                     page++;
-                                    console.log('getAPageAllPost:' + page);
+                                    console.log('now_page:' + page);
                                     return getAPageAllPost(element, page, false);
-                                }, 
+                                },
                                 i * 2000);
                         }
                     } else {
@@ -151,28 +118,3 @@ open_db_function(
         })
     }
 );
-/*
-            data.forEach(function(element) {
-                if (data) {
-                    getAPageAllPost(element, 1, true).then(function(last_page) {
-                        console.log('last_page', last_page);
-                        if (last_page) {
-                            for (var i = 2; i <= last_page; i++) {
-                                var page = 1;
-                                setTimeout(function() {
-                                        console.log('getAPageAllPost:' + page);
-                                        page++;
-                                        return getAPageAllPost(element, page, false);
-                                    }, 
-                                    i * 2000);
-                            }
-                        } else {
-                            return false;
-                        }
-                    });
-
-                } else {
-                    throw new Error(error);
-                }
-            });
-*/
