@@ -8,7 +8,6 @@ var mongodb = require('mongodb');
 var Promise = require('es6-promise').Promise;
 var Promise = require('promise');
 var axios = require('axios');
-var pmongo = require('promised-mongo').compatible();
 
 
 
@@ -25,16 +24,22 @@ db.open(function() {
         collection.find({}, { href: 1, _id: 0 }).toArray(function(err, data) {
             // console.dir(data[0].href); 
             if (data) {
-                // console.log(data);
+                console.log(Array.isArray(data));   
+                console.log(data.length);
+
+                console.log(data[0]);
+                console.log(typeof data[0]);
+                console.log((data[0]) instanceof Object);   
+
 
                 // console.dir(Href);
                 // var myArray = [];
                 // data.href = myArray;
 
-                data.forEach(function(element) {
-                    var url=element.href;
-                    console.log(url);
-                });
+                // data.forEach(function(element) {
+                //     var url=element.href;
+                //     console.log(url);
+                // });
 
                 // for (var i = 0; i < data.length; i++) {
                 //     console.dir("i:" + i);

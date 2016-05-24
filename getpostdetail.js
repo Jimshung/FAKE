@@ -25,13 +25,21 @@ var open_db_function = function(table, func_in) {
     });
 };
 
+/*
+data [ { href: 'http://www.mobile01.com/topicdetail.php?f=566&t=4781970' },
+  { href: 'http://www.mobile01.com/topicdetail.php?f=566&t=4804214' },......]
+
+data[0]  { href: 'http://www.mobile01.com/topicdetail.php?f=566&t=4781970' }
+*/
+
 open_db_function(
     'mobile01_post',
     function(collection, err) {
         collection.find({}, { href: 1, _id: 0 }).toArray(function(err, data) {
             if (data) {
-                // element = data[0];
-                element = data;
+                //element = data[0]可執行;element = data有error
+                element = data[1];
+                // element = data;
 
                 console.log("element", element)
                 getAPageAllPost(element, 1, true).then(function(last_page) {
@@ -61,13 +69,13 @@ open_db_function(
 );
 
 var getAPageAllPost = function(element, page, to_continue) {
-    console.log(element);
     if (page) {
         var this_href = element.href + '&p=' + page;
-        console.log("log1:" + element.href + '&p=' + page);
+        // console.log("log1:" + element.href + '&p=' + page);
+        console.log("log1:" + this_href);
+
 
     } else {
-        //console.log('element',element);
         var this_href = element.href;
         console.log("log2:" + element.href);
     }
@@ -81,17 +89,15 @@ var getAPageAllPost = function(element, page, to_continue) {
             $ = cheerio.load(response.data);
             var last_page = $('.pagination').find('a').last().attr('href').replace(/.*p=/g, "");
             //last_page為分頁最後值
-
-
             db.collection('post_detail', function(err, collection) {
                 $('.single-post').each(function(i, elem) {
                     var singlepost = {
-                        Reply_user: $(elem).find('.fn').text(),
-                        Reply_time: $(elem).find('.date').text(),
-                        Reply_content: $(elem).find('.single-post-content').text().replace(/\\r\\n|\\r|\\n|\s/g, "").replace(/.*:+.+(恕刪)./g, "")
-                    }
-                    console.log("===============");
-                    console.log(singlepost);
+                            Reply_user: $(elem).find('.fn').text(),
+                            Reply_time: $(elem).find('.date').text(),
+                            Reply_content: $(elem).find('.single-post-content').text().replace(/\\r\\n|\\r|\\n|\s/g, "").replace(/.*:+.+(恕刪)./g, "")
+                        }
+                        // console.log("===============");
+                        // console.log(singlepost);
                     collection.insert(singlepost, function(err, data) {
                         if (data) {
                             console.log('Successfully Insert');

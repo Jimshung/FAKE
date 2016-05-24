@@ -64,5 +64,3 @@ GetTopicList().then(function() {
             // console.log('i=' + i)
     };
 })
-
-
