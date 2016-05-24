@@ -30,13 +30,14 @@ var GetTopicList = function(page) {
             db.open(function() {
 
                 //第一頁31個貼文，後續一頁30個貼文
-                db.collection('mobile01_post', function(err, collection) {
+                db.collection('TopicList', function(err, collection) {
                     $('tbody>tr').each(function(i, elem) {
                         var subject = {
                             desc: $(elem).find('.subject-text>a').text(),
                             href: "http://www.mobile01.com/" + $(elem).find('.subject-text a').attr('href'),
                             dt: $(elem).find('p').first().text(),
-                            authur: $(elem).find('.authur a p').last().text()
+                            authur: $(elem).find('.authur a p').last().text(),
+                            lastpage: $(elem).find('.otherpages>a').last().text()
                         }
                         console.log(subject);
                         collection.insert(subject, function(err, data) {

@@ -19,17 +19,21 @@ var db = new mongodb.Db('FAKE', mongodbServer);
 
 
 db.open(function() {
-    db.collection('mobile01_post', function(err, collection) {
+    db.collection('TopicList', function(err, collection) {
         // db.getCollection('mobile01_post').find({}, { "href": 1, _id: 0 });
-        collection.find({}, { href: 1, _id: 0 }).toArray(function(err, data) {
+        collection.find({}, { href: 1, lastpage: 1, _id: 0 }).toArray(function(err, data) {
             // console.dir(data[0].href); 
             if (data) {
-                console.log(Array.isArray(data));   
-                console.log(data.length);
+                // console.log(data);
 
-                console.log(data[0]);
-                console.log(typeof data[0]);
-                console.log((data[0]) instanceof Object);   
+                // console.log(Array.isArray(data));   
+                // console.log(data.length);
+                console.log(data[0].href);
+                console.log(typeof data[0].href);
+
+                console.log(data[0].lastpage);
+                console.log(typeof data[0].lastpage);
+                // console.log((data[0]) instanceof Object);   
 
 
                 // console.dir(Href);
