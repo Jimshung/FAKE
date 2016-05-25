@@ -33,32 +33,46 @@ data[0]  { href: 'http://www.mobile01.com/topicdetail.php?f=566&t=4781970' }
 */
 
 open_db_function(
-    'mobile01_post',
+    'TopicList',
     function(collection, err) {
         collection.find({}, { href: 1, _id: 0 }).toArray(function(err, data) {
             if (data) {
                 //element = data[0]可執行;element = data有error
-                element = data[1];
                 // element = data;
-
-                console.log("element", element)
-                getAPageAllPost(element, 1, true).then(function(last_page) {
-                    console.log('last_page', last_page);
-                    if (last_page) {
-                        for (var i = 2; i <= last_page; i++) {
-                            var page = 1;
-                            setTimeout(function() {
-                                    page++;
-                                    console.log('now_page:' + page);
-                                    return getAPageAllPost(element, page, false);
-                                },
-                                i * 2000);
+                var i = 0;
+                var forpostdetail =function() {
+                    // console.log("element", element)
+                    if( i < data.length){
+                    element = data[i];
+                    getAPageAllPost(element, 1, true).then(function(last_page) {
+                        console.log('last_page', last_page);
+                        if (last_page) {
+                            for (var i = 2; i <= last_page; i++) {
+                                var page = 1;
+                                setTimeout(function() {
+                                        page++;
+                                        console.log('now_page:' + page);
+                                        return getAPageAllPost(element, page, false);
+                                    },
+                                    i * 2000);
+                            }
+                        } else {
+                            console.log('stop');
+                            return false;
                         }
-                    } else {
-                        console.log('stop');
-                        return false;
+                    });
+                        i = i + 1;
+                        console.log("第" + i + "篇評論");
                     }
-                });
+                    else{
+                        clearInterval(forpostdetail);
+                    }
+                }
+                setInterval(forpostdetail, 10000);
+                if (i >= data.length) {
+                    console.log("out, i >= data.length");
+                    clearInterval(forpostdetail);
+                }
 
             } else {
                 throw new Error(err);
@@ -96,8 +110,8 @@ var getAPageAllPost = function(element, page, to_continue) {
                             Reply_time: $(elem).find('.date').text(),
                             Reply_content: $(elem).find('.single-post-content').text().replace(/\\r\\n|\\r|\\n|\s/g, "").replace(/.*:+.+(恕刪)./g, "")
                         }
-                        // console.log("===============");
-                        // console.log(singlepost);
+                        console.log("===============");
+                        console.log(singlepost);
                     collection.insert(singlepost, function(err, data) {
                         if (data) {
                             console.log('Successfully Insert');

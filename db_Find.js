@@ -22,23 +22,18 @@ db.open(function() {
     db.collection('TopicList', function(err, collection) {
         // db.getCollection('mobile01_post').find({}, { "href": 1, _id: 0 });
         collection.find({}, { href: 1, lastpage: 1, _id: 0 }).toArray(function(err, data) {
-            // console.dir(data[0].href); 
-            if (data) {
+             if (data) {
                 // console.log(data);
 
                 // console.log(Array.isArray(data));   
                 // console.log(data.length);
                 console.log(data[0].href);
-                console.log(typeof data[0].href);
+                // console.log(typeof data[0].href);
 
-                console.log(data[0].lastpage);
-                console.log(typeof data[0].lastpage);
+                // console.log(data[0].lastpage);
+                // console.log(typeof data[0].lastpage);
                 // console.log((data[0]) instanceof Object);   
 
-
-                // console.dir(Href);
-                // var myArray = [];
-                // data.href = myArray;
 
                 // data.forEach(function(element) {
                 //     var url=element.href;
@@ -56,7 +51,3 @@ db.open(function() {
         })
     });
 });
-
-// var regex = /((t=.+[0-9]+))/g;
-// var myArray = myRe.exec(data[i].href);
-// console.dir(myRe.lastIndex.replace("t=", ""));

@@ -47,8 +47,7 @@ open_db_function(
                                 return Promise.all([ckip.getSentences(response), ckip.getTerms(response)]);
                             })
                             .then(function(results) {
-                                console.log("斷句：" + results[0]); // [ ' 台新(N) 金控(N) 12月(N) 3日(N) 將(ADV) 召開(Vt) 股東(N) 臨時會(N) 進行(Vt) 董監(N) 改選(Nv) 。(PERIODCATEGORY)' ] 
-                                // console.log("斷詞："+results[1]);
+                                console.log("斷句：" + results[0]); 
                                 db.collection('post_detail_ckip', function(err, collection2) {
                                     collection2.insert({ "ckip_getSentences": results[0], "ckip_getTerms": results[1] }, function(err, data) {
                                         if (data) {
