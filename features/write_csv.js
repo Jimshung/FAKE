@@ -32,3 +32,33 @@ fs.writeFile('helloworld.csv', file_content, function (err) {
 });
 
 
+/*
+jimwu-3:features jim$ node write_csv.js 
+0
+val: 1.2
+val: 1.3
+val: 2.5
+val: 3.2
+val: 0.3
+val: 2.1
+val: 1.4
+val: 5.2
+val: 0.2
+val: 1.3
+val: 3.5
+val: 3.3
+val: 0.9
+val: 1.1
+val: 3.5
+val: 3.3
+val: 0.7
+val: 3.3
+val: 4.5
+val: 3.3
+val: 0.5
+val: 0.1
+val: 2.1
+val: 1.2
+file_content > helloworld.csv
+jimwu-3:features jim$ vim helloworld.csv 
+*/
