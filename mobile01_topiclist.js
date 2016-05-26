@@ -55,7 +55,7 @@ var GetTopicList = function(page) {
 }
 
 GetTopicList().then(function() {
-    for (var i = 2; i <= 10; i++) {
+    for (var i = 2; i <= 3; i++) {
         var page = 1;
         setTimeout(function() {
                 console.log('GetTopicList_page：' + page)

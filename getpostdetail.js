@@ -15,7 +15,6 @@ var mongodbServer = new mongodb.Server('localhost', 27017, {
 });
 var db = new mongodb.Db('FAKE', mongodbServer);
 
-
 var open_db_function = function(table, func_in) {
 
     db.open(function() {
@@ -24,6 +23,8 @@ var open_db_function = function(table, func_in) {
         });
     });
 };
+
+
 
 /*
 data [ { href: 'http://www.mobile01.com/topicdetail.php?f=566&t=4781970' },
@@ -40,31 +41,29 @@ open_db_function(
                 //element = data[0]可執行;element = data有error
                 // element = data;
                 var i = 0;
-                var forpostdetail =function() {
-                    // console.log("element", element)
-                    if( i < data.length){
-                    element = data[i];
-                    getAPageAllPost(element, 1, true).then(function(last_page) {
-                        console.log('last_page', last_page);
-                        if (last_page) {
-                            for (var i = 2; i <= last_page; i++) {
-                                var page = 1;
-                                setTimeout(function() {
-                                        page++;
-                                        console.log('now_page:' + page);
-                                        return getAPageAllPost(element, page, false);
-                                    },
-                                    i * 2000);
+                var forpostdetail = function() {
+                    if (i < data.length) {
+                        element = data[i];
+                        getAPageAllPost(element, 1, true).then(function(last_page) {
+                            console.log('last_page', last_page);
+                            if (last_page) {
+                                for (var i = 2; i <= last_page; i++) {
+                                    var page = 1;
+                                    setTimeout(function() {
+                                            page++;
+                                            console.log('now_page:' + page);
+                                            return getAPageAllPost(element, page, false);
+                                        },
+                                        i * 2000);
+                                }
+                            } else {
+                                console.log('stop');
+                                return false;
                             }
-                        } else {
-                            console.log('stop');
-                            return false;
-                        }
-                    });
+                        });
                         i = i + 1;
-                        console.log("第" + i + "篇評論");
-                    }
-                    else{
+                        console.log("第" + i + "個href");
+                    } else {
                         clearInterval(forpostdetail);
                     }
                 }
@@ -73,11 +72,9 @@ open_db_function(
                     console.log("out, i >= data.length");
                     clearInterval(forpostdetail);
                 }
-
             } else {
                 throw new Error(err);
             }
-
         })
     }
 );
@@ -86,9 +83,7 @@ var getAPageAllPost = function(element, page, to_continue) {
     if (page) {
         var this_href = element.href + '&p=' + page;
         // console.log("log1:" + element.href + '&p=' + page);
-        console.log("log1:" + this_href);
-
-
+        console.log("現在URL為:" + this_href);
     } else {
         var this_href = element.href;
         console.log("log2:" + element.href);
@@ -106,28 +101,27 @@ var getAPageAllPost = function(element, page, to_continue) {
             db.collection('post_detail', function(err, collection) {
                 $('.single-post').each(function(i, elem) {
                     var singlepost = {
-                            Reply_user: $(elem).find('.fn').text(),
-                            Reply_time: $(elem).find('.date').text(),
-                            Reply_content: $(elem).find('.single-post-content').text().replace(/\\r\\n|\\r|\\n|\s/g, "").replace(/.*:+.+(恕刪)./g, "")
-                        }
-                        console.log("===============");
-                        console.log(singlepost);
+                        Reply_user: $(elem).find('.fn').text(),
+                        Reply_time: $(elem).find('.date').text(),
+                        Reply_content: $(elem).find('.single-post-content').text().replace(/\\r\\n|\\r|\\n|\s/g, "").replace(/.*:+.+(恕刪)./g, "")
+                    }
+                    console.log("===============");
+                    console.log(singlepost);
                     collection.insert(singlepost, function(err, data) {
                         if (data) {
-                            console.log('Successfully Insert');
+                            // console.log('Successfully Insert');
                         } else {
                             console.log('Failed to Insert');
                         }
                     }); // save to db
                 });
             });
-
-            console.log('last_page_in', last_page);
-            console.log('to_continue', to_continue);
+            // console.log('last_page_in', last_page);
+            // console.log('to_continue', to_continue);
             if (to_continue && last_page) {
                 return Promise.resolve(last_page);
             } else {
-                console.log('to stop');
+                console.log('no other pages');
                 return Promise.resolve(false);
             }
         })
