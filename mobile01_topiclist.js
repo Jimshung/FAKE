@@ -37,7 +37,7 @@ var GetTopicList = function(page) {
                             href: "http://www.mobile01.com/" + $(elem).find('.subject-text a').attr('href'),
                             dt: $(elem).find('p').first().text(),
                             authur: $(elem).find('.authur a p').last().text(),
-                            lastpage: $(elem).find('.otherpages>a').last().text()
+                            otherpages: $(elem).find('.otherpages>a').last().text()
                         }
                         console.log(subject);
                         collection.insert(subject, function(err, data) {

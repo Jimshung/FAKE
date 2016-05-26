@@ -6,88 +6,63 @@ moment.locale("zh-tw");
 var async = require('async');
 var mongodb = require('mongodb');
 var Promise = require('es6-promise').Promise;
+var Promise = require('promise');
 var axios = require('axios');
 
+var mongodbServer = new mongodb.Server('localhost', 27017, {
+    auto_reconnect: true,
+    poolSize: 10
+});
+var db = new mongodb.Db('FAKE', mongodbServer);
+
+var open_db_function = function(table, func_in) {
+
+    db.open(function() {
+        db.collection(table, function(err, collection) {
+            func_in(collection, err);
+        });
+    });
+};
 
 
-// http://www.mobile01.com/topicdetail.php?f=566&t=4794459&p=1
+var getAPage = function(page) {
+    return axios.post('http://www.mobile01.com/topicdetail.php?f=566&t=4781970&p=' + page, {
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.112 Safari/537.36',
+            },
+            timeout: 2000,
+        })
+        .then(function(response) {
+        // .then(function() {
 
-axios.get('http://www.mobile01.com/topicdetail.php', {
-        // baseURL: 'http://www.mobile01.com/topicdetail.php',
-        headers: {
-            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.112 Safari/537.36',
+            $ = cheerio.load(response.data);
 
-        },
-        timeout: 2000,
-        params: {
-            f: 566,
-            t: 4794459,
-            p: 1
-        },
-    })
-    .then(function(response) {
-        // console.log(response.config.params.p);
+            // var last_page = $('.pagination').find('a').last().attr('href').replace(/.*p=/g, "");
+            // var last_page = 3;
 
-        $ = cheerio.load(response.data);
-
-        var last_page = $('.pagination').find('a').last().text();
-        // console.log(last_page);
-
-        for (var i = 1; i <= last_page; i++) {
-            console.log("現在頁數：" + response.config.params.p);
-
+            //last_page為分頁最後值
             $('.single-post').each(function(i, elem) {
                 var singlepost = {
                     Reply_user: $(elem).find('.fn').text(),
                     Reply_time: $(elem).find('.date').text(),
-                    //Reply_content: $(elem).find('.single-post-content').text().replace(/\\r\\n|\\r|\\n|\s/g, "").replace(/.*:+.+(恕刪)./g, "")
-                    Reply_content: $(elem).find('.single-post-content').text().replace(/\\r\\n|\\r|\\n|\s/g, "").replace(/wrote.*:+.+(恕刪)./g, "")
-
-                    //Reply_content: $(elem).find('.single-post-content').text().replace(/[^\\r\\n]*wrote:\\r\\n.*.+(恕刪)./g, "")//.replace(/\\r\\n|\\r|\\n|\s/g, "")
-
+                    Reply_content: $(elem).find('.single-post-content').text().replace(/\\r\\n|\\r|\\n|\s/g, "").replace(/.*:+.+(恕刪)./g, "")
                 }
                 console.log("===============");
                 console.log(singlepost);
-                 response.config.params.p++;
+                // save to db
             });
-            response.config.params.p++;
-        };
-    })
-    .catch(function(response) {
-        console.log(response);
-    });
+            // return Promise.resolve(last_page)
+        })
+}
 
 
-// for (var page = 1; page <= 1; page++) {
-
-//     var p_url = "http://www.mobile01.com/topicdetail.php?f=566&t=4771973&p=" + page;
-//     var options = {
-//         url: p_url,
-//         headers: {
-//             'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.112 Safari/537.36',
-//         }
-//     };
-//     console.log(p_url);
-//     request(options, function(error, response, body) {
-//         // console.log(error);
-//         if (error) return console.log(error)
-
-//         $ = cheerio.load(body);
-
-//         //爬主題下的回文
-//         $('.single-post').each(function(i, elem) {
-//             var singlepost = {
-//                     Reply_user: $(elem).find('.fn').text(),
-//                     Reply_time: $(elem).find('.date').text(),
-//                     Reply_content: $(elem).find('.single-post-content').text()
-//                 }
-//                 //http://stackoverflow.com/questions/28790458/how-to-remove-div-and-br-using-cheerio-js
-//                 //https://api.jquery.com/jQuery.trim/
-
-//             console.log("===============");
-//             console.log(singlepost);
-
-//         });
-
-//     });
-// } //for
+getAPage().then(function() {
+    for (var i = 2; i <= 3; i++) {
+        var page = 1;
+        setTimeout(function() {
+            console.log('getAPage：' + page)
+            page++;
+            return getAPage(page)
+        }, i * 2000)
+    };
+})
