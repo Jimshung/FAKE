@@ -35,11 +35,9 @@ open_db_function(
         collection.find({}, { 'Reply_content': 1, _id: 0 }).toArray(function(err, data) {
             if (data) {
                 var i = 0;
-                // console.log("element："+element);
-
                 var for_loop = function() {
-                    if (i < 300) {
-                        console.log("i < 300");
+                    if (i < data.length) {
+                        console.log("i < data.length");
                         element = data[i];
                         console.log("Reply_content：", element.Reply_content);
                         ckip.request(element.Reply_content)
@@ -47,9 +45,14 @@ open_db_function(
                                 return Promise.all([ckip.getSentences(response), ckip.getTerms(response)]);
                             })
                             .then(function(results) {
-                                console.log("斷句：" + results[0]); 
-                                db.collection('post_detail_ckip', function(err, collection2) {
-                                    collection2.insert({ "ckip_getSentences": results[0], "ckip_getTerms": results[1] }, function(err, data) {
+                                console.log("斷句(含標記)：" + results[0]);
+                                db.collection('post_detail_ckip2', function(err, collection2) {
+                                    var ckip_sen = JSON.stringify(results[0]).replace(/(\(\S*\))/g, "");
+                                    console.log("ckip_sen：" + ckip_sen);
+
+                                    // collection2.insert({ "ckip_getSentences": ckip_sen, "ckip_getTerms": results[1] }, function(err, data) {
+                                    collection2.insert({ "ckip_getSentences": ckip_sen }, function(err, data) {
+
                                         if (data) {
                                             console.log('Successfully Insert');
                                         } else {
@@ -64,13 +67,13 @@ open_db_function(
                         i = i + 1;
                         console.log("第" + i + "篇評論");
                     } else {
-                        console.log("i >= 300");
+                        console.log("i >= data.length");
                         clearInterval(for_loop);
                     }
                 }
                 setInterval(for_loop, 4000);
-                if (i >= 300) {
-                    console.log("out, i >= 300");
+                if (i >= data.length) {
+                    console.log("out, i >= data.length");
                     clearInterval(for_loop);
                 }
             } else {

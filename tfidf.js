@@ -50,5 +50,5 @@ var tf_idf = function(id, word, articles, df_dict){
 	}
 }
 console.log(tf_idf(0,"安慰",articles,df_dict));
-console.log(tf_idf(1,"基礎",articles,df_dict));
+console.log(tf_idf(0,"基礎",articles,df_dict));
 console.log(tf_idf(0,"以",articles,df_dict));

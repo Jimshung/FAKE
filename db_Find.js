@@ -19,15 +19,15 @@ var db = new mongodb.Db('FAKE', mongodbServer);
 
 
 db.open(function() {
-    db.collection('TopicList', function(err, collection) {
-        // db.getCollection('mobile01_post').find({}, { "href": 1, _id: 0 });
-        collection.find({}, { href: 1, lastpage: 1, _id: 0 }).toArray(function(err, data) {
+    db.collection('post_detail_ckip', function(err, collection) {
+        // db.getCollection('post_detail_ckip').find({}, { "ckip_getSentences": 1, _id: 0 });
+        collection.find({}, { ckip_getSentences: 1, _id: 0 }).toArray(function(err, data) {
              if (data) {
-                // console.log(data);
+                console.log(data);
 
                 // console.log(Array.isArray(data));   
                 // console.log(data.length);
-                console.log(data[0].href);
+                // console.log(data[0].href);
                 // console.log(typeof data[0].href);
 
                 // console.log(data[0].lastpage);
