@@ -8,61 +8,40 @@ var mongodb = require('mongodb');
 var Promise = require('es6-promise').Promise;
 var Promise = require('promise');
 var axios = require('axios');
+var nodejieba = require("nodejieba");
 
-var mongodbServer = new mongodb.Server('localhost', 27017, {
-    auto_reconnect: true,
-    poolSize: 10
+
+nodejieba.load({
+    userDict: '/Users/jim/Documents/workspace/FAKE/node_modules/nodejieba/dict/user.dict.utf8',
+    stopWordDict: '/Users/jim/Documents/workspace/FAKE/node_modules/nodejieba/dict/stop_words.utf8',
 });
-var db = new mongodb.Db('FAKE', mongodbServer);
-
-var open_db_function = function(table, func_in) {
-
-    db.open(function() {
-        db.collection(table, function(err, collection) {
-            func_in(collection, err);
-        });
-    });
-};
 
 
-var getAPage = function(page) {
-    return axios.post('http://www.mobile01.com/topicdetail.php?f=566&t=4781970&p=' + page, {
-            headers: {
-                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.112 Safari/537.36',
-            },
-            timeout: 2000,
-        })
-        .then(function(response) {
-        // .then(function() {
 
-            $ = cheerio.load(response.data);
+var sentence = "確實也不能排除可能是玻璃保護貼裂開，但目前我摸保護貼的裂痕處完全平滑無裂痕的觸感過兩天拿去給神腦貼膜人員鑑定看看是保護貼還是螢幕裂開~有後續消息再跟大家說明嚕~PS.這支手機我是蠻喜歡的除了1.個人感覺相機介面不夠人性、2.螢幕截圖方式很麻煩(還不能錄螢幕)、3.輸入法不能直接在虛擬鍵盤上手寫(我之前用SONY)~其他如手機質感、手感、性能、續航力、充電都很滿意~尤其是MADEINTAIWAN看了就爽";
 
-            // var last_page = $('.pagination').find('a').last().attr('href').replace(/.*p=/g, "");
-            // var last_page = 3;
+var result;
+result = nodejieba.cutAll(sentence);
+console.log('.cutAll:' + result);
+console.log("============");
 
-            //last_page為分頁最後值
-            $('.single-post').each(function(i, elem) {
-                var singlepost = {
-                    Reply_user: $(elem).find('.fn').text(),
-                    Reply_time: $(elem).find('.date').text(),
-                    Reply_content: $(elem).find('.single-post-content').text().replace(/\\r\\n|\\r|\\n|\s/g, "").replace(/.*:+.+(恕刪)./g, "")
-                }
-                console.log("===============");
-                console.log(singlepost);
-                // save to db
-            });
-            // return Promise.resolve(last_page)
-        })
-}
+result = nodejieba.cut(sentence, true);
+console.log('.cut:' + result);
+console.log("============");
 
+result = nodejieba.cutHMM(sentence);
+console.log("cutHMM:" + result);
+console.log("============");
 
-getAPage().then(function() {
-    for (var i = 2; i <= 3; i++) {
-        var page = 1;
-        setTimeout(function() {
-            console.log('getAPage：' + page)
-            page++;
-            return getAPage(page)
-        }, i * 2000)
-    };
-})
+result = nodejieba.cutForSearch(sentence);
+console.log("cutForSearch:" + result);
+console.log("============");
+
+result = nodejieba.tag(sentence);
+console.log("tag:" + result);
+console.log("============");
+
+var topN = 3;
+result = nodejieba.extract(sentence, topN);
+console.log('topN:' + result);
+console.log("============");
