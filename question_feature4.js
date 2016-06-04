@@ -1,6 +1,5 @@
 //特徵四
-var question_dict = ["?","什麼","誰","哪一個"];
-
+var question_dict = ["?","什麼","誰","哪一個","嗎","呢","吧","啊","為何","如何","幾時","多少","多少錢","怎樣","怎麼","為何麼","難道","何嘗","何必","who","what","which","whose","when","where","how","why"];
 /*
 http://baike.baidu.com/view/720086.htm
 汉语疑问编辑
@@ -23,7 +22,6 @@ function intersection(a,b){
    while (x--) b.indexOf(a[x])!=-1 && rs.push(a[x]);
    return rs.sort();
 }
-
 
 var count_question = function(article,question_dict){
 	var question_count = 0
