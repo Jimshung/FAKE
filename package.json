@@ -1,21 +1,23 @@
 {
-    "name": "test",
-    "version": "0.0.1",
-    "private": true,
-    "scripts": {
-        "start": "node server.js"
-    },
-    "dependencies": {
-        "async": "*",
-        "axios": "^0.11.0",
-        "cheerio": "*",
-        "es6-promise": "^3.1.2",
-        "express": "3.2.6",
-        "iconv-lite": "*",
-        "moment": "*",
-        "mongodb": "*",
-        "promise": "^7.1.1",
-        "request": "*",
-        "ckip-client": "0.0.3",
-    }
+  "name": "test",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "async": "*",
+    "axios": "^0.11.0",
+    "bluebird": "^3.4.0",
+    "cheerio": "*",
+    "ckip-client": "0.0.3",
+    "es6-promise": "^3.1.2",
+    "express": "3.2.6",
+    "iconv-lite": "*",
+    "lodash": "^4.13.1",
+    "moment": "*",
+    "mongodb": "*",
+    "promise": "^7.1.1",
+    "request": "*"
+  }
 }

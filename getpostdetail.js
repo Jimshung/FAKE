@@ -29,7 +29,7 @@ var open_db_function = function(table, func_in) {
 open_db_function(
     'TopicList_Htc10',
     function(err, collection) {
-         if (err) return console.log(err);
+        if (err) return console.log(err);
         collection.find({}, { href: 1, otherpages: 1, _id: 0 }).toArray(function(err, data) {
             if (err) throw err;
 
@@ -105,7 +105,7 @@ var getAPageAllPost = function(element, page, to_continue) {
 
                     // console.log("===============");
                     // console.log(singlepost);
-                    
+
                     collection.insert(singlepost, function(err, data) {
                         if (err) throw err;
                         console.log('insert Successfully')

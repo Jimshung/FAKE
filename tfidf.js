@@ -4,7 +4,7 @@ var articles = [["以","以","以","情緒","詞","為","基礎","基礎","之",
 ["以","以","以","以","情緒","詞","為","自在","之","情境","資訊","連結","與","觀察"],
 ["以","情緒","詞","為","基礎","之","冷靜","資訊","連結","與","觀察"],
 ["以","情緒","詞","為","基礎","之","情境","資訊","連結","與","觀察","資訊","資訊"],
-["以","情緒","詞","為","基礎","之","情境","情境","情境","情境","資訊","連結","與","觀察"],];
+["你","情緒","詞","為","基礎","之","情境","情境","情境","情境","資訊","連結","我","觀察","a","b"],];
 
 var df_dict = {};
 var get_df = function(articles, idf_dict){
@@ -40,8 +40,9 @@ var tf_idf = function(id, word, articles, df_dict){
 			tf_n += 1;
 		}
 	}
-	//console.log("word",word);
-	//console.log("tf",tf_n);
+console.log("sentence.length",sentence.length);
+	console.log("word",word);
+	console.log("tf",tf_n);
 	if(df_dict[word]){
 		return (tf_n/sentence.length) * Math.log((articles.length/df_dict[word])+1);
 	}
@@ -49,6 +50,6 @@ var tf_idf = function(id, word, articles, df_dict){
 		return (tf_n/sentence.length) * Math.log((articles.length/0.5)+1);
 	}
 }
-console.log(tf_idf(0,"安慰",articles,df_dict));
-console.log(tf_idf(0,"基礎",articles,df_dict));
-console.log(tf_idf(0,"以",articles,df_dict));
+console.log(tf_idf(4,"基礎",articles,df_dict));
+// console.log(tf_idf(0,"基礎",articles,df_dict));
+// console.log(tf_idf(0,"以",articles,df_dict));
