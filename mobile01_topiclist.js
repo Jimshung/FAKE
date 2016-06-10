@@ -30,7 +30,7 @@ var GetTopicList = function(page) {
             db.open(function() {
 
                 //第一頁31個貼文，後續一頁30個貼文
-                db.collection('TopicList', function(err, collection) {
+                db.collection('TopicList_300', function(err, collection) {
                     $('tbody>tr').each(function(i, elem) {
                         var subject = {
                             desc: $(elem).find('.subject-text>a').text(),
@@ -39,7 +39,7 @@ var GetTopicList = function(page) {
                             authur: $(elem).find('.authur a p').last().text(),
                             otherpages: $(elem).find('.otherpages>a').last().text()
                         }
-                        console.log(subject);
+                        // console.log(subject);
                         collection.insert(subject, function(err, data) {
                             if (data) {
                                 console.log('Successfully Insert');
@@ -55,7 +55,7 @@ var GetTopicList = function(page) {
 }
 
 GetTopicList().then(function() {
-    for (var i = 2; i <= 3; i++) {
+    for (var i = 2; i <= 300; i++) {
         var page = 1;
         setTimeout(function() {
                 console.log('GetTopicList_page：' + page)

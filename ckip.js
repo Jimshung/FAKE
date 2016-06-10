@@ -30,14 +30,14 @@ var ckip = require('ckip-client')('140.109.19.104', 1501, 'jim51114', 'abc6541')
 
 
 open_db_function(
-    'post_detail',
+    'post_detail_HTC10',
     function(collection, err) {
-        collection.find({}, { 'Reply_content': 1, _id: 0 }).toArray(function(err, data) {
+        collection.find({}, { 'Reply_user': 1,'Reply_content': 1, _id: 0 }).toArray(function(err, data) {
             if (data) {
-                var i = 500;
+                var i = 0;
                 var for_loop = function() {
                     if (i < 1000) {
-                        console.log("i < data.length");
+                        console.log("i < 1000");
                         element = data[i];
                         console.log("Reply_content：", element.Reply_content);
                         ckip.request(element.Reply_content)
@@ -46,12 +46,12 @@ open_db_function(
                             })
                             .then(function(results) {
                                 console.log("斷句(含標記)：" + results[0]);
-                                db.collection('post_detail_ckip3', function(err, collection2) {
+                                db.collection('test', function(err, collection2) {
                                     var ckip_sen = JSON.stringify(results[0]).replace(/(\(\S*\))/g, "");
                                     console.log("ckip_sen：" + ckip_sen);
 
                                     // collection2.insert({ "ckip_getSentences": ckip_sen, "ckip_getTerms": results[1] }, function(err, data) {
-                                    collection2.insert({ ckip_sen }, function(err, data) {
+                                    collection2.insert({ "Reply_user":element.Reply_user,"Reply_content":element.Reply_content,ckip_sen }, function(err, data) {
 
                                         if (data) {
                                             console.log('Successfully Insert');
@@ -67,13 +67,13 @@ open_db_function(
                         i = i + 1;
                         console.log("第" + i + "篇評論");
                     } else {
-                        console.log("i >= data.length");
+                        console.log("i >= 1000");
                         clearInterval(for_loop);
                     }
                 }
-                setInterval(for_loop, 4000);
+                setInterval(for_loop, 6000);
                 if (i >= 1000) {
-                    console.log("out, i >= data.length");
+                    console.log("out, i >= 1000");
                     clearInterval(for_loop);
                 }
             } else {

@@ -27,7 +27,7 @@ var open_db_function = function(table, func_in) {
 };
 
 open_db_function(
-    'TopicList',
+    'TopicList_Htc10',
     function(err, collection) {
          if (err) return console.log(err);
         collection.find({}, { href: 1, otherpages: 1, _id: 0 }).toArray(function(err, data) {
@@ -93,7 +93,7 @@ var getAPageAllPost = function(element, page, to_continue) {
         .then(function(response) {
             $ = cheerio.load(response.data);
 
-            db.collection('post_detail', function(err, collection) {
+            db.collection('post_detail_HTC10', function(err, collection) {
                 if (err) throw err;
 
                 $('.single-post').each(function(i, elem) {
