@@ -41,10 +41,9 @@ open_db_function(
 
             var i = 0;
 
-            var sid = setInterval(CKIP_LOOP, 4000);
+            var sid = setInterval(CKIP_LOOP, 3000);
 
             function CKIP_LOOP() {
-                console.log('start')
 
                 if (i >= data.length) {
                     clearInterval(sid);
@@ -59,9 +58,9 @@ open_db_function(
                     })
                     .then(function(results) {
                         // console.log("斷句(含標記)：" + results[0]);
-                        db.collection('ckip_sen', function(err, collection) {
+                        db.collection('ckip_Sentences', function(err, collection) {
                             var ckip_sen = JSON.stringify(results[0]).replace(/(\(\S*\))/g, "");
-                            console.log("content_ckip：" + ckip_sen);
+                            console.log("ckip_Sentences：" + ckip_sen);
                             collection.insert({ "Reply_content": element.Reply_content, "Reply_user": element.Reply_user, ckip_sen }, function(err, data) {
 
                                 if (data) {

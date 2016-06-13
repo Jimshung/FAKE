@@ -98,9 +98,9 @@ function article_cosine_similarity(article, phone_feature, stop_word) {
     var results = [];
     var t_count = count_word(phone_feature);
     for (var i = 0; i < article.length; i++) {
-        console.log("original",article[i]);
+        // console.log("original",article[i]);
         var article_clean = clean_stopword(article[i], stop_word);
-        console.log("clean",article_clean);
+        // console.log("clean",article_clean);
         var s_count = count_word(article_clean);
         var vector_result = to_vector(s_count, t_count);
         var s_array = vector_result[1];
@@ -188,7 +188,7 @@ open_db_function(
     'test',
     function(err, collection, callback) {
         if (err) return console.log(err);
-        collection.find({}, { ckip_sen: 1, _id: 0 }).toArray(function(err, data) {
+        collection.find({}, { 'Reply_user': 1, 'Reply_content': 1, ckip_sen: 1, _id: 0 }).toArray(function(err, data) {
             for (var i = 0; i < data.length; i++) {
                 var data2 = data[i]['ckip_sen'].replace(/[\[\],"]/g, '').trim().split('　');
                 article.push(data2)
@@ -211,6 +211,7 @@ open_db_function(
                     if (err) throw err;
                     var emotion_dict = data.toString().split("\n");
 
+                    console.log("Reply_user"+data1.Reply_user);
                     var result1 = article_cosine_similarity(article, phone_feature, stop_word);
                     var result2 = count_emotion(article, emotion_dict);
                     var result3 = has_url(article, url_expression);
@@ -218,8 +219,8 @@ open_db_function(
 
                     // console.log("phone-feature");
                     // console.log(phone_feature);
-                    console.log("cosine similarity: ");
-                    console.log(result1);
+                    // console.log("cosine similarity: ");
+                    // console.log(result1);
                     // console.log("emotion:");
                     // console.log(result2);
                     // console.log("url_result:");
@@ -239,7 +240,7 @@ open_db_function(
                     // console.log("csv_values:");
                     // console.log(csv_values);
 
-                    // write_csv("test.csv", csv_values);
+                    // write_csv("spam.csv", csv_values);
                 });
             });
         });

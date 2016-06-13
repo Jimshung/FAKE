@@ -54,13 +54,13 @@ CKIPClient.prototype.request = function (text, callback) {
     var debouncedEnd = debounce(end, 5000);
 
     client.on('data', function (data) {
-      console.log('get data', data.length)
+      // console.log('get data', data.length)
       resultXml += iconv.decode(data, "big5");
       debouncedEnd()
     })
 
     function end() {
-      console.log('end data', resultXml)
+      // console.log('end data', resultXml)
       client.end();
 
       parseString(resultXml, function (err, result) {
