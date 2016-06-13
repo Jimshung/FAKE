@@ -188,7 +188,7 @@ open_db_function(
     'test',
     function(err, collection, callback) {
         if (err) return console.log(err);
-        collection.find({}, { 'Reply_user': 1, 'Reply_content': 1, ckip_sen: 1, _id: 0 }).toArray(function(err, data) {
+        collection.find({}, { ckip_sen: 1, _id: 0 }).toArray(function(err, data) {
             for (var i = 0; i < data.length; i++) {
                 var data2 = data[i]['ckip_sen'].replace(/[\[\],"]/g, '').trim().split('　');
                 article.push(data2)
@@ -210,8 +210,6 @@ open_db_function(
                 fs.readFile('./dictionary/phone_feature.txt', function(err, data) {
                     if (err) throw err;
                     var emotion_dict = data.toString().split("\n");
-
-                    console.log("Reply_user"+data1.Reply_user);
                     var result1 = article_cosine_similarity(article, phone_feature, stop_word);
                     var result2 = count_emotion(article, emotion_dict);
                     var result3 = has_url(article, url_expression);
