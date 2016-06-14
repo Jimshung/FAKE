@@ -185,7 +185,7 @@ function write_csv(filename, values) {
 
 
 open_db_function(
-    'test',
+    'ckip_Sentences',
     function(err, collection, callback) {
         if (err) return console.log(err);
         collection.find({}, { ckip_sen: 1, _id: 0 }).toArray(function(err, data) {
@@ -214,6 +214,8 @@ open_db_function(
                     var result2 = count_emotion(article, emotion_dict);
                     var result3 = has_url(article, url_expression);
                     var result4 = count_emotion(article, question_dict);
+                    var result5 = "non_spam";
+
 
                     // console.log("phone-feature");
                     // console.log(phone_feature);
@@ -233,12 +235,13 @@ open_db_function(
                             result2[i].toFixed(fix_val),
                             result3[i].toFixed(fix_val),
                             result4[i].toFixed(fix_val),
+                            result5,
                         ]);
                     }
-                    // console.log("csv_values:");
-                    // console.log(csv_values);
+                    console.log("csv_values:");
+                    console.log(csv_values);
 
-                    // write_csv("spam.csv", csv_values);
+                    write_csv("spam_dataset.csv", csv_values);
                 });
             });
         });
